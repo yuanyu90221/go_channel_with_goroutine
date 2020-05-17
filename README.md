@@ -64,3 +64,8 @@ func addByShareCommunicate(n int) []int {
 	return ints
 }
 ```
+## conclusion
+
+如果需要用多個goroutine彼此溝通最好的方式還是使用channel
+
+也是官方比較推薦的作法
