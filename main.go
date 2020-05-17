@@ -9,6 +9,10 @@ func main() {
 	foo := addByShareMemory(10)
 	fmt.Println(len(foo))
 	fmt.Println(foo)
+
+	bar := addByShareCommunicate(10)
+	fmt.Println(len(bar))
+	fmt.Println(bar)
 }
 
 func addByShareMemory(n int) []int {
@@ -27,5 +31,26 @@ func addByShareMemory(n int) []int {
 	}
 
 	wg.Wait()
+	return ints
+}
+
+func addByShareCommunicate(n int) []int {
+	var ints []int
+	channel := make(chan int, n)
+
+	for i := 0; i < n; i++ {
+		go func(channel chan<- int, order int) {
+			channel <- order
+		}(channel, i)
+	}
+
+	for i := range channel {
+		ints = append(ints, i)
+
+		if len(ints) == n {
+			break
+		}
+	}
+	close(channel)
 	return ints
 }
